@@ -1,12 +1,28 @@
+const Blog = require('../models/Blog');
+const {arraysToObject} = require('../../util/mongoose')
+const {arrayToObject} = require('../../util/mongoose')
 class BlogController {
-    // (GET) /blog
-    index(req, res) {
-        res.render('blog');
+
+    index(req, res, next) {
+        Blog.find({})
+        .then((Blogs) => {
+            res.render('blog', {
+                Blogs: arraysToObject(Blogs)
+            })
+        })
+        .catch((err) => next)
     }
-    //(GET) /blog/:id
-    show(req, res) {
-        res.send('Details Blog');
+    
+    show(req, res, next) {
+        Blog.findOne({slug: req.params.slug})
+        .then((blog) => {
+            res.render('blogs/show', { 
+                blog: arrayToObject(blog)
+            })
+        })
+        .catch((err) => next)
     }
+    
 }
 
 module.exports = new BlogController();
